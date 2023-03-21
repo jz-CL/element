@@ -1,0 +1,31 @@
+B_01_info
+
+Model danych
+str 3 (34)
+
+pythoniczność
+
+przykład:
+zamiast collection.len() stosuje się len(collection)
+
+idiomatyczne funkcjonalności języka
+
+formalizacja interfejsu bloków konstrukcyjych
+
+str 5 (36)
+
+przykład P_1-1
+
+klasa FrenchDeck niejawnie dziedziczy z klasy obiekt, jej funkcjonalność nie jest dziedziczona,ale pochodzi z podległeo modelu danych i kompozycji. Dzięki implementacji metod specjalnych __len__ i __getitem__, klasa FrenchDeck zachowuje się jak standardowa sekwencja Pythona, pozwalając na korzystanie  z podstawowych funkcjonalności języka (np. iteracji i wycinania) oraz biblioteki standardowej, przykładem może być użycie funkcji random.choice, reversed i sorted
+dzięki kompozycji implementacje metod __len__ i __getitem__ mogą delegowaćcałą pracę do obiektu list o nazwie self._cards
+
+
+w aktualnej implenetacji talii FrenchDeck nie da się tasować - bo niezmienna: karty i ich pozycje nie mogą być zmieniane bez naruszenia hermetyzacjii bezpośredniej obsługi atrybutu _cards 
+tasowanie - kiedyś tam! r 13
+
+ważną cechą metod specjaln jest to że mają być wywoływane przez interpreter Pythona, a nie przez programistę.
+nie piszemy my_object.__len__()
+a piszemy len(my_object) -> gdy my_object jest wystąpieniem klasy zdefiniowanej przez użytkownika -> to Python wywoła zaimplementowaną metodę __len__
+
+
+str 9 
