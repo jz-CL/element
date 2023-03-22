@@ -14,7 +14,9 @@ formalizacja interfejsu bloków konstrukcyjych
 
 str 5 (36)
 
+------------------------------------
 przykład P_1-1
+------------------------------------
 
 klasa FrenchDeck niejawnie dziedziczy z klasy obiekt, jej funkcjonalność nie jest dziedziczona,ale pochodzi z podległeo modelu danych i kompozycji. Dzięki implementacji metod specjalnych __len__ i __getitem__, klasa FrenchDeck zachowuje się jak standardowa sekwencja Pythona, pozwalając na korzystanie  z podstawowych funkcjonalności języka (np. iteracji i wycinania) oraz biblioteki standardowej, przykładem może być użycie funkcji random.choice, reversed i sorted
 dzięki kompozycji implementacje metod __len__ i __getitem__ mogą delegowaćcałą pracę do obiektu list o nazwie self._cards
@@ -27,5 +29,117 @@ ważną cechą metod specjaln jest to że mają być wywoływane przez interpret
 nie piszemy my_object.__len__()
 a piszemy len(my_object) -> gdy my_object jest wystąpieniem klasy zdefiniowanej przez użytkownika -> to Python wywoła zaimplementowaną metodę __len__
 
+interpreter używa skrótu dla typów wbudowanych, takich jak list, str, bytearray lub rozszerzeń - takich jak tablice NumPy.
 
-str 9 
+Kolekcje Pythona o zmiennym rozmiarze napisane są w C zawierają strukturę o nazwie PyVarObject, która zawiera pole ob_size - co jest znacznie szybsze od wywołania metody.
+
+Najczęściej wywoływanie metod specjalnych odbywa się niejawnie.
+dla przykładu: instrukcja for i in x: powoduje wywołanie funkcji iter(x), która z kolei może wywołac metodę x.__iter__(), jeśli jest ona dostępna, albo użyć x.__getitem__() - jak w przykładzie FrenchDeck
+
+zwykle kod nie powinien zawierać zbyt wielu bezpośrednich wywołańmetod specjalnych.
+o ile nie zajmujemy się metaprogramowaniem, powinnyśmy znacznie częściej implementować metody specjalne, niż wywoływać jest w sposób jawny.
+
+Jedyną metodą specjalną która jest często wywoływana bezpośrednio w kodzie użytkownika jest metoda __init__.
+służy ona do wywołania inicjatora klasy nadrzędnej we własnej implementacji metody __init__
+
+
+jeśli potrzebujemywywołac metodę specjalną, zwykle lepiej jest wywołać związaną z nią funkcję wbudowaną (np. len, iter, str)
+te wbudowane funkcję wywoują odpowiednią metodę specjalną, ale często dostarczają także inne usługi, poza tym w przypadku typów wbudowanych sa szybsze od wywołań metod
+
+
+emulowanie typów numerycznych
+reprezentacja tekstowa obiektów
+wartość logiczna obiektów
+implementowanie kolekcji
+
+
+
+emulacja typów liczbowych
+
+implementujemy klasę reprezentującą wektory dwuwymiarowe -> wektory euklidesowe
+
+do replezentacji wektorów dwuwymiarowych wystarałby typ complex - lecz naszą klasę chcemy poszerzyć aby reprezentowała wektory n-wymiarowe
+
+projekt interfejsu API dla klasy
+symulowana wersja sesji konsoli
+
+v1 = Vector(2, 4)
+v2 = Vector(2, 1)
+v1 + v2
+Vector(4, 5)
+
+operator + tworzy wynik w postaci Vector i wyświetlany jest w postaci Vector(4, 5)
+
+wbudowana funkcja abs zwraca wartość bezwzględną liczb całkowitychi zmiennoprzecinkowych
+orz moduł liczb zespolonych- complex
+
+aby zachować spójność w API również użyjemy funkcji abs do obliczenia modułu wektora:
+
+v = Vector(3, 4)
+abs(v)
+5.0
+
+
+implementacja operatora * - mnożenie przez skalar (tj. przez liczbę)
+
+v * 3
+Vector(9, 12)
+abs(v * 3)
+15.0
+
+przykłąd 1-2 klasa Vector która ma zaimplementowane operacje dzięki użyciu metod specjalnych __repr__, __abs__, __add__ i __mul__
+
+------------------------------------
+przykład P_1-2
+------------------------------------
+
+żadna z zaimplementowanych metod nie jest bezpośrednio wywoływana wewnątrz klasy
+są one wywoływane przez interpreter Pythona
+
+w przykładzie mamy zaimplementowa operatory + oraz * - co pokazuje podstawowe użycie metod __add__ oraz __mul__
+w obu przypadka metody zwracają nową instancję klasy Vector i niemodyfikują żadnego operandu - self i other są jedynie odczytywane.
+jest to oczekiwane zachowanie operatorów infiksowych -> tworzą nowe obiekty, nie modyfikują operandów
+
+
+reprezentacja tekstowa
+
+metoda specjalna __repr__ jest wywoływana przez wbudowaną funkcję repr, aby otrzymać reprezentację tekstową obiektu do inspekcji.
+
+jeśli metoda __repr__ nie będzie zaimplementowana, wystąpienia wektorów byłyby pokazana w konsoli w taki sposób
+
+<Vector object at 0x10f5a0c10>
+
+konsola oraz debugger wywołują funkcje repr na wynikach przetważanych wyrażeń, taj jak to robi symbol zastępczy %r w klasycznym formtowaniu z operatorem % i pole konwersji !r w nowej składn formatowania
+
+https://docs.python.org/3.10/library/string.html#format-string-syntax
+Format String Syntax
+
+używanej przez f-strings w metodzie str.format
+
+
+użyte f-string w naszej implementacji __repr__ używa !r
+
+return f'Vector({self.x!r}, {self.y!r})'
+
+do otrzymania standardowejreprezentacji atrybutówdo wyświetlenia.
+jest istotna różnica w pokazywaniu Vector(1, 2) a Vector('1', '2') - oczywiście drugi przypadek nie działałby gdyż argumentami onstruktora muszą być liczby, a nie łańcuchy
+
+Łańcuch znaków zwracany przez __repr__ powinien być jednoznacznyi o ile możliwe odpowiadać kodowi źródłowemu koniecznemu do ponownego utworzenia reprezentowanego obiektu
+
+w naszym przykładzie wybrana reprezentacja wygląda tak jak wywołnie konstruktora klasy
+np. Vector(3, 4)
+
+metoda __str__ jest wywoływana przez wbudowną funkcję str() i niejawnie używan w funkcji print()
+
+metoda __str__ powinna zwracać łańcuch odpowiedni do wyświtlenia dla użytkowników końcowych.
+
+ w przypadku implementacji tylko jednej z tych metod specjalnych (___str__, __repr__) korzystniej wybrać __repr__, gdyż nie ma dostępnej niestandardowej metody __str__.
+ Python wywoła __repr__ jako metoę rezerwową
+ 
+ 
+ What is the difference between __str__ and __repr__?
+ https://stackoverflow.com/questions/1436703/what-is-the-difference-between-str-and-repr
+ 
+ 
+ 
+ str 13 (44)

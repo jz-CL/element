@@ -1,0 +1,10 @@
+pathlib
+
+https://www.freecodecamp.org/news/how-to-use-pathlib-module-in-python/
+
+
+PurePath().parent outputs the parent of the path:
+
+
+In [*]: pathlib.PurePath('/src/goo/scripts/main.py').parent                     
+Out[*]: PurePosixPath('/src/goo/scripts')
