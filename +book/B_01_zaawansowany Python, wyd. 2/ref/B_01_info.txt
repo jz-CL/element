@@ -142,4 +142,70 @@ metoda __str__ powinna zwracać łańcuch odpowiedni do wyświtlenia dla użytko
  
  
  
- str 13 (44)
+ 
+ Wartość logiczna trybu niestandardowego
+ 
+ typ wbudowany w Pythonie to bool, lecz jest akceptowany dowolny obiekt w kontekstach logicznych, takich ja 
+ wyrażenia kontrolujące instrukcje - if, while, operandy operatorów and, or i not.
+ 
+ aby wyznaczy czy wartość x jest truthy czy falsy, Python stosuje bool(x), co zawsze zwraca True lub False.
+ 
+ Domyślne wystąpienia klas definiowanych przez użytkownika są uważana jako truthy, o ile nie mają zaimplementowanych metod __bool__ ani __len__
+ 
+ zasadzniczo bool(x) wywołuje x.__bool__i wykorzystuje wynik tej metody.
+ jeś metoda __bool__ nie jest zaimplementowana Python próbuje wywołać metodę x.__len__(), a jeśli ona zwraca zero, to bool zwraca False, w przeciwnym razie boo zwraca True.
+ 
+ w naszym przykładzie implementacja metody __bool__jest koncepcyjnie prosta - zwraca False gdy moduł wektora jest równy zero, a w przeciwnym wypadku True.
+ 
+ konwertujemy moduł na Boolean przy użyciu bool(abs(self)) - ponieważ metoda __bool__ ma zwracać zgodnie z oczekiwaniem typ logiczny.
+ 
+poza metodą __bool__ rzadko zdarza się konieczność jawnego wywołania bool(), gdyż każdego obiektunayć w kontekscie logicznym.
+
+można zauważyć że specjalna metoda __bool__ pozwala obiektom na spójność z regułami testowania wartości prawdy które są zdefiniowane w dokumentacji Pythona -
+
+Truth Value Testing
+https://docs.python.org/3/library/stdtypes.html#truth
+
+można też wykreować szybszą implementację Vector.__bool__
+
+def __bool__(self):
+	return bool(self.x or self.y)
+	
+
+API kolekcji
+
+interfejs podstawowych typów kolekcji występujących w języku
+wszystkie klasy to ABC - abstrakcyjne klasy bazowe.
+
+każda z najwyższych klas ABC zawiera pojedynczą metodę specjalną.
+klasa ABC Collection - od Pythona 3.6 - unifikuje trzy kluczowe interfejsy, które powinna implementować każda kloekcja 
+
+- Iterable - obsługa for, rozpakowywania* i innych form iteracji
+
+	     * 4.8.5. Unpacking Argument Lists
+	       https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists
+
+- Sized - wsparcie wbudownej funkcji len
+- Container - obsługa operatora in
+
+Python nie wymaga od konkretnych klas, aby rzeczywiście wywodziły się z której kolwiekz tych klas ABC
+
+Dowolna klasa implementująca __len__ spełnia wymagania interfejsu Sized
+
+Ważne specjalizacje Collection:
+
+Sequence - formalizuje interfejs wbudowanych funkcji, takich jak list i str
+Mapping - implementowane przez dict, collections.deaultdict itp
+Set - interfejs typów wbudowanych set i frozenset
+
+tylko klasa Sequence jest Reversible - gdyż sekwencje wspierają dowolne porządkowanie swojej zawartości- czego nie obsługują odwzorowania ani zbiory
+
+począwszy od Pythona 3.7 dict jest oficjalnie uporządkowany - tzn. zachowana jest kolejność wstawiania kluczy - nie można zmienić kolejności kluczy w dict wg własnego życzenia
+
+przegląd metod specjalnych
+
+Data model
+https://docs.python.org/3/reference/datamodel.html
+
+
+ str 16 (47)
