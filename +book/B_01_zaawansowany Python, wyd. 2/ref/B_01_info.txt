@@ -1,6 +1,6 @@
 B_01_info
 
-Model danych
+1. Model danych
 str 3 (34)
 
 pythoniczność
@@ -207,5 +207,79 @@ przegląd metod specjalnych
 Data model
 https://docs.python.org/3/reference/datamodel.html
 
+2. Tablica sekwencji
 
- str 16 (47)
+Python odziedziczył z ABC (językiem ABC) ujednoliconą obsługę sekwencji
+
+Łańcuchy, listy, sekwencje bajtów, tablice, elementy XML i wyniki baz danych współdzielą bogaty zbiór operacji, obejmujący iteracje, wycinanie, sortowanie i łączenie 
+
+zrozumienie list oraz podstawy wyrażeń generatorów
+używanie krotek jako rekordów kontra ich wykorzystywanie jako niezmiennych list
+rozpakowywanie sekwencji i wzorce sekwencji
+czytanie i zapisywanie wycinków
+specjalizowane typy sekwencji, jak tablice i kolejki
+
+
+zarządzanie uporządkowanymi sekwencjami za pomocą bisect
+https://www.fluentpython.com/extra/ordered-sequences-with-bisect/
+
+przegląd wbudowanych sekwencji
+
+biblioteka standardowa oferuje wiele typów sekwencji zaimplementowanych w języku C:
+
+Sekwencje kontenerowe - przechowują elementy różnych typów, włącznie z innymi kontenerami
+np. list tuple i collections.deque
+
+Sekwencje płaskie - przechowują elementy jednego typu
+np. str, bytes i array.array
+
+Sekwencje kontenerowe - przechowują odwołania do zawartych w sobie obiektów, które mogą być dowolnego typu
+
+sekwencje płaskie są bardziej upakowane, lec przy tym ograniczone do przechowywania prymitywnych wartości - takich jak znaki, bajty i liczby
+
+każdy obiekt Pythona w pamięcia zawiera nagłówek z metadanymi
+najprostszy obiekt Pythona - float, ma pole wartości oraz dwa pola metadanych:
+ob_refcnt - licznik referencji do obiektu
+ob_type - wskaźnik do typu obiektu
+ob_fval - liczba double języka C, przechowywująca wartość
+
+https://docs.python.org/3/c-api/typeobj.html#slot-type-typedefs
+
+w 64-bitowe kompilacji Pythona każde z tych pól zajmuje 8 bajtów.
+
+tablica float jest bardziej zwarta, niż krotka z tymi samymi wartościami.
+tablica to pojedynczy obiekt przechowywujący surowe wartośc, podcas gdy krotka składa się z wielu obiektów - siebie samej oraz każdego obiektu float w niej zawartego
+
+
+innym sposobem grupowania sekwencji jest ich zmienność
+
+Sekwencje zmienne
+list byte.array, array.array, i collections.deque
+
+Sekwencje niezmienne
+tuple, str i bytes
+
+
+
+Wyrażenia listowe i wyrażenia generatora
+szybkim sposobem na zbudowanie sekwencji jest użycie wyrażenia listowego - gdy celem jest list - lub wyrażenia generatora - dla wszystkich innych rodzajów sekwencji.
+
+nie używając tych form syntaktycznych - nasz kod jest mniej czytelny, również mniej szybszy
+
+w środowisku Pythona
+wyrażenia listowe - to listcomp
+wyrażenia generatora - to genexp
+
+Przykład 2-1
+
+Przykład 2-2
+
+bardziej czytelny przykładem jest przykład 2-2
+
+
+zastosowanie pętli for
+
+
+
+
+ str 26 (57)
