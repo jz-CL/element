@@ -354,7 +354,66 @@ budowanie listy  za pomocą wyrażenia listowego i złożenia funkcji map-filter
 >>> beyond_ascii
 [162, 163, 165, 8364, 164]
 
+
+
 test szybkości 
 https://github.com/fluentpython/example-code-2e/blob/master/02-array-seq/listcomp_speed.py
 
+Iloczyny kartezjańskie
+wyrażenia listowe mogą generować listy na podstawie iloczynu kartezjańskiego dwóch obiektów iterowalnych lub większej ich liczby.
+
+elementy składające się na iloczyn kartezjański to krotki powstałe z elementów pochodzących z każdego wejściowego obiektu iterowalnego.
+
+wynikowa lista ma długość równą przemnożonym długością wejściowych obiektów iterowalnych
+
+iloczyn kartezjański sekwencji trzech wartości kart i sekwencji czterech kolorów, w wyniku daje sekwencję dwanastu par
+
+ 
+przykład iloczynu kartezjańskiego z zastosowaniem wyrżeni listowego
+
+>>> colors = ['black', 'white']
+>>> sizes = ['S', 'M', 'L']
+>>> tshirts = [(color, size) for color in colors for size in sizes]
+generuje listę krotek uporządkowanych wg koloru - color, a następnie rozmiaru - size
+>>> tshirts
+[('black', 'S'), ('black', 'M'), ('black', 'L'), ('white', 'S'), ('white', 'M'), ('white', 'L')]
+
+taka lista jest porządkowana tak, jakby pętle for były zagnieżdżone w tej samej kolejności, w jakiej występują w wyrażeniu listowym
+
+>>> for color in colors:
+...     for size in sizes:
+...             print((color, size))
+... 
+('black', 'S')
+('black', 'M')
+('black', 'L')
+('white', 'S')
+('white', 'M')
+('white', 'L')
+
+aby uporządkować elementy wg rozmiaru, a następnie koloru, należy zmienić kolejność klauzul for.
+zmiana sposobu zapisu wyrażenia listowego poprawia czytelność wyrażenia
+
+>>> tshirts = [(color, size) for size in sizes
+...                          for color in colors]
+>>> tshirts
+[('black', 'S'), ('white', 'S'), ('black', 'M'), ('white', 'M'), ('black', 'L'), ('white', 'L')]
+
+
+w przykładzie 1-1
+    def __init__(self):
+        self._cards = [Card(rank, suit) for suit in self.suits for rank in self.ranks]
+        
+dla poprawienia czytelności = można ją zapisać:
+
+    def __init__(self):
+        self._cards = [Card(rank, suit) for suit in self.suits 
+        				for rank in self.ranks]
+        				
+
+wyrażenia listowe mają tylko jedno zastosowanie: budują listy
+        
+
+
+mamty konstrukcję
  str 27 (58)
