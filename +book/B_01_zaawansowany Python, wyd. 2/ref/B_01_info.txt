@@ -414,6 +414,7 @@ dla poprawienia czytelności = można ją zapisać:
 wyrażenia listowe mają tylko jedno zastosowanie: budują listy
         
 
+wyrażenia generatora
 
-mamty konstrukcję
+
  str 27 (58)
