@@ -278,8 +278,83 @@ bardziej czytelny przykładem jest przykład 2-2
 
 
 zastosowanie pętli for
+do skanowania sekwencji, aby zliczać lub wybierać elementy
+obliczanie agregacji - sum, średnich
+przetwarzanie
+
+kod 2-1 buduje listę
+w 2-2 jest zastosowane wyrażenie listowe - jego zadaniem jest budowanie listy
+
+w przypadku stosowania wyrażeń listowych, należy brać pod uwagę aby to wyrażenie nie miało więcej niż dwa wiersze i było zwięzłe
+
+
+w kodzie Pythona podziały wierszy są ignorowane wewnątrz parnawiasów []{} lub ()
+jest możliwe budowanie wielowierszowych list, wyrażeń listowych i generatorów, słowników itp. bez używania znaku ucieczki \ do oznaczania kontynuacji wiersza.
+stosując \ nie wolno umieścić po nim żadnego znaku - nawet spacji
+
+kodując wielowierszowy literał listowy należ zadbać aby po ostatniej pozycji umieścić przecinek -
+aby nie tworzyć zamętu przy wyszukiwaniu różnic
+
+
+---------------------------------------------------
+Lokalny zasięg w wyrżeniach listowych i generatora
+
+w Pytchonie 3 wyrażenia listowe, wyrażenia generatora, wyrażenia zbiorów - setcomp - oraz słownikowe - dictcomp, mają zasięg lokalnydo przechowywania zmiennych przypisanych w klauzuli for
+
+zmienne przypisane za pomocą 'operatora morsa' := pozostają dostępne po powrocie z tych wyrażeń - w przeciwieństwie do lokalnych zmiennych funkcji
+
+PEP 572 – Assignment Expressions
+https://peps.python.org/pep-0572/
+
+przykład 1
+
+x = 'ABC'
+codes = [ord(x) for x in x]
+x
+'ABC'
+codes
+[65, 66, 67]
+
+x - jest powiązany z 'ABC' - nie jest oderwany
+
+przykład 2
+
+codes = [last := ord(c) for c in x]
+last
+67
+c
+Traceback (most recent call last):
+  File "/snap/pycharm-community/323/plugins/python-ce/helpers/pydev/pydevconsole.py", line 364, in runcode
+    coro = func()
+  File "<input>", line 1, in <module>
+NameError: name 'c' is not defined
+
+last jest widoczne poza zakresem
+c - nie jest widoczne poza zakresem
+
+---------------------------------------------------
+
+wyrażenia listowe budują listy na podstawie sekwencji lub dowolnego innego typu iterowalnego za pomocą filtrowania i transformcji elementów.
+to samo można realizować za moca wbudowanych funkcji filter i map
+
+
+Wyrażenia listowe a funkcje filter i map
+
+Przykład 2-3
+budowanie listy  za pomocą wyrażenia listowego i złożenia funkcji map-filter
+
+>>> symbols = '$¢£¥€¤'
+>>> beyond_ascii = [ord(s) for s in symbols if ord(s) > 127]
+>>> beyond_ascii
+[162, 163, 165, 8364, 164]
 
 
 
+>>> beyond_ascii = list(filter(lambda c: c > 127, map(ord, symbols)))
+>>> beyond_ascii
+[162, 163, 165, 8364, 164]
 
- str 26 (57)
+test szybkości 
+https://github.com/fluentpython/example-code-2e/blob/master/02-array-seq/listcomp_speed.py
+
+ str 27 (58)
