@@ -1,0 +1,15 @@
+https://www.w3schools.com/python/python_regex.asp
+https://docs.python.org/3/library/re.html
+
+
+
+Sekwencja
+
+prog = re.compile(pattern)
+result = prog.match(string)
+
+jest równa
+
+result = re.match(pattern, string)
+
+
