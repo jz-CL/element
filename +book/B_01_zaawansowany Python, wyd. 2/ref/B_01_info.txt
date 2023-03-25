@@ -416,5 +416,46 @@ wyrażenia listowe mają tylko jedno zastosowanie: budują listy
 
 wyrażenia generatora
 
+do inicjalizacji krotek, tablic i innych typów sekwencji możemy początkowo używać także wyrażeń listowych , lecz wyrażenia generatora oszczędzają pamięć - generują pojedyncze elementy przy użyciu protokołu iteratora, zamiast budować całą listę  tylko po to, by załadować ją do innego konstruktora
+
+wyrażenia generatora korzystają z tej samej składni co wyrażenia listowe, ale są zawarte w nawiasach okągłych  a nie kwadratowych
+
+podstawowe użycie wyrażeń generatora do budowania krotki i tablicy
+
+inicjowanie krotki i tablicy za pomocą wyrażenia generatora
+
+>>> symbols = '$¢£¥€¤'
+>>> tuple(ord(symbol) for symbol in symbols)
+(36, 162, 163, 165, 8364, 164)
+
+jeśli wyrażenie generatora stanowi pojedynczy argument w wywołaniu funkcji, nie ma potrzeby dublowania nawiasów otaczających
+
+>>> import array
+>>> array.array('I', (ord(symbol) for symbol in symbols))
+array('I', [36, 162, 163, 165, 8364, 164])
+
+konstruktor array przyjmuje dwa argumenty, więc nawiasy wokół wyrażenia generatora są obowiązkowe.
+
+pierwszy argument konstruktora array definiuje typ służący do przechowywania liczb w tablicy.
+
+Przykład 2-6
+Iloczyn kartezjański w wyrażeniu generatora
+ 
+>>> colors = ['black', 'white']
+>>> sizes = ['S', 'M', 'L']
+>>> for tshirt in ('%s %s' % (c, s) for c in colors for s in sizes):
+...     print(tshirt)
+... 
+black S
+black M
+black L
+white S
+white M
+white L
+
+wyrażenie generatora wytwarza elementy pojedynczo.
+w tym przykładzie lista sześciu odmian koszulek nie powstaje
+
+
 
  str 27 (58)
