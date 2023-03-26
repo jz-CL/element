@@ -577,6 +577,10 @@ dzięki określoej długości instancja krotki ma alokowane dokładnie tyle pami
 referencje do elementów w krotce przechowywane są w tablicy w strukturze krotki.
 lista utrzymuje wskaźnik do tablicy referencji przechowywanej w innym miejscu.
 jest to istotne gdyż lista rozrastając się ponad wielkość aktualnie alokowanej przestrzeni, Python musi realokowoać tablicę referencji, aby zrobić miejsce.
-takie podejście sprawia, że pamieć podręczna procesora jest mniej efektywna 
+takie podejście sprawia, że pamieć podręczna procesora jest mniej efektywna.
 
+
+porównanie metod krotek i list
+
+krotki obsługują wszytkie metody lis, które nie obejmują
  str 34 (65)
