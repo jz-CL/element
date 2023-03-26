@@ -586,5 +586,9 @@ krotki obsługują wszytkie metody list, które nie obejmują dodawania ani usuw
 
 
 
+rozpakowywanie sekwencji i typów iterowalnych
 
- str 34 (65)
+rozpakowywanie pozwala uniknąć niepotrzebnego i podatnego na błędy używania indeksów 
+
+
+ str 36 (67)
