@@ -457,5 +457,56 @@ wyrażenie generatora wytwarza elementy pojedynczo.
 w tym przykładzie lista sześciu odmian koszulek nie powstaje
 
 
+Krotki
+krotki mogą służyć jako niezmienne listy, ale także jako rekordy bez nazw pól.
+
+Krotki jako rekordy
+
+krotki przechowuj rekordy - każdy element w krotce przechowuje dane jednego pola, a położenie tego elementu wyznacza jego znaczenie.
+
+jeśli krotki mają być uważane jako niezmienne listy - to nalezy uważać, że liczba i kolejność elementów w zależności od kontekstu może, ale nie musi być istotna.
+
+jeśli krotki używamy jako kolekcji pól, liczba elementów jest często stała, a ich kolejność zawsze ważna.
+
+przykład 2-7
+zastosowanie krotki jako rekordy
+
+>>> lax_coordinates = (33.9425, -118.408056)
+szerokość i długość geograficzna lotniska międzynarodowego w Los Angeles
+
+city, year, pop, chg, area = ('Tokyo', 2003, 32450, 0.66, 8014)
+dane dotyczące Tokyo: nazwa, rok, populacja (w mln), zmiana populacji (%), obszar (km2)
+
+>>> traveler_ids = [('USA', '31195855'), ('BRA', 'CE342567'), ('ESP', 'XDA205856')]
+lista krotek zawierających kod krajui numer paszportu w formie (country_code, passport_numbeer)
+
+
+>>> for passport in sorted(traveler_ids):
+...     print('%s/%s' % passport)
+... 
+BRA/CE342567
+ESP/XDA205856
+USA/31195855
+
+podczas iteracji zmienna passport wiązana jest z poszczególnym krotkami
+
+'%s/%s' % passport - operator formatujący % rozumie krotkii traktuje każdy element jako oddzielne pole
+
+>>> for country, _ in traveler_ids:
+...     print(country)
+... 
+USA
+BRA
+ESP
+
+pętla for wie jak oddzielnie pobierać elementy z krotek - jest to nazywane rozpakowywaniem 
+w tym przykładzie drugi element jest nie istotny - wobec tego jest przypisany do zmiennej fikcyjnej
+
+często uważa się rekordy jako struktury danych z nazywanymi polami.
+w ww przykładzie mamy taką strukturę:
+
+city, year, pop, chg, area = ('Tokyo', 2003, 32450, 0.66, 8014)
+
+jest to przykład rozpakowywania krotek
 
  str 27 (58)
