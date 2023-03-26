@@ -509,4 +509,10 @@ city, year, pop, chg, area = ('Tokyo', 2003, 32450, 0.66, 8014)
 
 jest to przykład rozpakowywania krotek
 
+
+
+
+
+
+
  str 27 (58)
