@@ -565,6 +565,18 @@ https://stackoverflow.com/questions/68630/are-tuples-more-efficient-than-lists-i
 Are tuples more efficient than lists in Python?
 Czy w Pythonie krotki są wydajniejsze od list?
 
+przy przetworzeniu literału krotki, Python generuje kod bajtowy dla stałej krotkowej w jednej operacji
+dla literału listy kod bajtowy wypycha każdy element jako oddzielną stałą na stos danych, po czym buduje listę.
 
+dla danej krotki t zwraca referencję do samego t.
+nie ma potrzeby kopiowania 
+dla listy l konstruktor list(l) musi utworzyć nową kopię l.
+
+dzięki określoej długości instancja krotki ma alokowane dokładnie tyle pamięci, ile potrzebuje
+
+referencje do elementów w krotce przechowywane są w tablicy w strukturze krotki.
+lista utrzymuje wskaźnik do tablicy referencji przechowywanej w innym miejscu.
+jest to istotne gdyż lista rozrastając się ponad wielkość aktualnie alokowanej przestrzeni, Python musi realokowoać tablicę referencji, aby zrobić miejsce.
+takie podejście sprawia, że pamieć podręczna procesora jest mniej efektywna 
 
  str 34 (65)
