@@ -513,6 +513,58 @@ jest to przykład rozpakowywania krotek
 
 krotki jako niezmienne listy
 
+interpreter Pythona oraz biblioteka standardowa szeroko wykorzystują krotki jako niezmienne listy 
+
+korzyści:
+
+przejrzystość - w kodzie długość krotki się nigdy nie zmien
+
+wydajność - krotka zajmuje mniej pamięci, niż lista o tej samej długości - co pozwala Pythonowi dokonać pewnych optymalizacji
+
+niezmienność krotki dotyczy tylko referencji, które zawiera.
+
+zawartość krotki jako takiej jest niezmienna, oznacza to, że przechowywane w niej referencje zawsze będą wskazywać te same obiekty.
+jeśli jeden ze wskazywanych obiektów jest zmienny - np. lista - jego zawartość może sie zmienić.
+
+>>> a = (10, 'alpha', [1, 2])
+>>> b = (10, 'alpha', [1, 2])
+>>> a == b
+True
+>>> b[-1].append(99)
+>>> b
+(10, 'alpha', [1, 2, 99])
+>>> a == b
+False
 
 
- str 27 (58)
+jak określić jawnie, czy krotka (lub dowolny inny obiekt) ma ustaloną wartość, można użyć wbudowanej funkcji hash 
+obiekt jest hashowalny jedynie wtedy gdy jego wartość nigdy nie może sie zmienić.
+niehashowalnej krotki nie można wstawić jako kluca do słownika - dict ani elementu zbioru - set
+
+przykład funkcji która jawnie okresla czy krotka (lub dowolny inny obiekt) ma ustaloną wartość, używając wbudowanej funkcji hash()
+
+>>> def fixed(o):
+...     try:
+...             hash(o)
+...     except TypeError:
+...             return False
+...     return True
+... 
+>>> tf = (10, 'alpha', (1, 2))
+>>> tm = (10, 'alpha', [1, 2])
+>>> fixed(tf)
+True
+>>> fixed(tm)
+False
+
+w pewnym sensie jest to pułapka - nie wychwycenie - czy krotka jest ze zmiennymi elementami 
+
+-->
+https://stackoverflow.com/questions/68630/are-tuples-more-efficient-than-lists-in-python/22140115#22140115
+
+Are tuples more efficient than lists in Python?
+Czy w Pythonie krotki są wydajniejsze od list?
+
+
+
+ str 34 (65)
