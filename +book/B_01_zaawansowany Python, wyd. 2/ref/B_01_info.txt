@@ -582,5 +582,9 @@ takie podejście sprawia, że pamieć podręczna procesora jest mniej efektywna.
 
 porównanie metod krotek i list
 
-krotki obsługują wszytkie metody lis, które nie obejmują
+krotki obsługują wszytkie metody list, które nie obejmują dodawania ani usuwania elementów, krotki nie mają metody __reversed__ lecz działa na nie funkcja reversed(krotka)
+
+
+
+
  str 34 (65)
