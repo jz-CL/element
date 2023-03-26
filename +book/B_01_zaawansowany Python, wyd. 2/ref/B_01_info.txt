@@ -511,7 +511,7 @@ jest to przykład rozpakowywania krotek
 
 
 
-
+krotki jako niezmienne listy
 
 
 
