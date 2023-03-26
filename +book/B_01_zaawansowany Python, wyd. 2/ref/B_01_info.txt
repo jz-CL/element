@@ -588,7 +588,50 @@ krotki obsługują wszytkie metody list, które nie obejmują dodawania ani usuw
 
 rozpakowywanie sekwencji i typów iterowalnych
 
-rozpakowywanie pozwala uniknąć niepotrzebnego i podatnego na błędy używania indeksów 
+rozpakowywanie pozwala uniknąć niepotrzebnego i podatnego na błędy używania indeksów w celu wydobywanie=a elementów z sekwencji
+
+rozpakowywanie działa z dowolnym iterowalnym obiektem jako źródłem danych - wyłącznie z iteratorami, które nie obsługują notacji indexowej ([])
+
+jedynym wymogiem jest to, że typ iterowalny zwraca dokładnie jeden element na zwienną po stronie odbierającej, o ile nie zostanie użyta gwiazdka (*) do przechwycenia nadmiarowych elementów
+
+najbardziej widoczna forma rozpakowywania to przypisywanie równoległe - przypisywanie elementów typu iterowalnego do krotki zmiennych
+
+>>> lax_coordinates = (33.9425, -118.408056)
+>>> latitude, longitude = lax_coordinates
+>>> latitude
+33.9425
+>>> longitude
+-118.408056
+>>> 
+
+zastosowanie rozpakowywania poprzez zamianę wartości zmiennych  bez użycia zmiennej tymczasowej
+
+>>> b, a = a, b
+
+rozpakowywanie jest poprzedzone argumentu gwiazdką (*) przy wywołaniu funkcji
+
+>>> divmod(20, 8)
+(2, 4)
+>>> t = (20, 8)
+>>> divmod(*t)
+(2, 4)
+>>> quotient, remainder = divmod(*t)
+>>> quotient, remainder
+(2, 4)
+>>> 
+
+funkcja zwraca wiele wartości w sposób wygodny dla wywołującego.
+
+przykładem może być funkcja os.path.split() - buduje ona krotkę (path, last_part) ze ścieżki systemu plików:
+
+
+>>> import os
+>>> _, filename = os.path.split('/home/luciano/.ssh/id_rsa.pub')
+>>> filename
+'id_rsa.pub'
+>>> 
+
+
 
 
  str 36 (67)
