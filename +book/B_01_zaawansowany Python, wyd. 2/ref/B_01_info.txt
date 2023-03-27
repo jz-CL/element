@@ -631,7 +631,224 @@ przykładem może być funkcja os.path.split() - buduje ona krotkę (path, last_
 'id_rsa.pub'
 >>> 
 
+używanie * do przechwytywania nadmiarowych elementów
+
+definiowanie parametrów funkcji przy użyciu *args w celu przechwyceni dowolnych nadmiarowych argumentów jest klasyczną cechą Pythona.
+
+w Pythonie 3 idea została rozszerzona również na przypisanie równoegłe
+
+>>> a, b, *rest = range(5)
+>>> a, b, rest
+(0, 1, [2, 3, 4])
+>>> 
+>>> a, b, *rest = range(3)
+>>> a, b, rest
+(0, 1, [2])
+>>> 
+>>> a, b, *rest = range(2)
+>>> a, b, rest
+(0, 1, [])
+
+
+prefix * może być zastosowany do dokoładnie jednej zmiennej, ale może się pojawić na dowolnej pozycji
+
+>>> a, *body, c, d = range(5)
+>>> a, body, c, d
+(0, [1, 2], 3, 4)
+>>> 
+>>> *head, b, c, d = range(5)
+>>> head, b, c, d
+([0, 1], 2, 3, 4)
+
+rozpakowywanie z * w wywołaniach funkcjii literałach sekwencji
+
+https://peps.python.org/pep-0448/
+wprowadzona bardziej elastyczną składnię dla rozpakowania iterowalnych
+
+https://docs.python.org/3/whatsnew/3.5.html#pep-448-additional-unpacking-generalizations
+
+w wywołaniach funkcji możemy użyć * wiele razy:
+
+>>> def fun(a, b, c, d, *rest):
+...     return a, b, c, d, rest
+... 
+>>> fun(*[1, 2], 3, *range(4, 7))
+(1, 2, 3, 4, (5, 6))
+
+Gwiazdka * może również zostać być użyta przy definiowania literałówlist, tupli lub set:
+
+>>> *range(4), 4
+(0, 1, 2, 3, 4)
+>>> 
+
+>>> [*range(4), 4]
+[0, 1, 2, 3, 4]
+>>> 
+
+>>> {*range(4), 4, *(5, 6, 7)}
+{0, 1, 2, 3, 4, 5, 6, 7}
+>>> 
+
+rozpakowywanie krotek działa również z zagnieżdżonymi strukturami.
 
 
 
- str 36 (67)
+Zagnieżdżone rozpakowywanie
+
+
+Rozpakowywanie zagnieżdżonych krotek w celu dostępu do długości geograficznej:
+
+Przykład 2-8
+każda krotka przechowuje rekord z czterema polami, przy czym ostatnie pole to para współrzędnych
+ ('Tokyo', 'JP', 36.933, (35.689722, 139.691667))
+
+poprzez przypisanie ostatniego pola do zagnieżdżonej krotki rozpakowujemy współrządne
+for name, _, _, (lat, lon) in metro_areas: 
+	...
+
+test lon <= 0: wybiera jedynie miasta z zachodniej półkuli
+if lon <= 0: 
+	...
+
+>>> metro_areas = [
+...     ('Tokyo', 'JP', 36.933, (35.689722, 139.691667)),
+...     ('Delhi NCR', 'IN', 21.935, (28.613889, 77.208889)),
+...     ('Mexico City', 'MX', 20.142, (19.433333, -99.133333)),
+...     ('New York-Newark', 'US', 20.104, (40.808611, -74.020386)),
+...     ('São Paulo', 'BR', 19.649, (-23.547778, -46.635833)),
+... ]
+>>> def main():
+...     print(f'{"":15} | {"latitude":>9} | {"longitude":>9}')
+...     for name, _, _, (lat, lon) in metro_areas: 
+...             if lon <= 0: 
+...                     print(f'{name:15} | {lat:9.4f} | {lon:9.4f}')
+... 
+
+>>> main()
+
+                |  latitude | longitude
+Mexico City     |   19.4333 |  -99.1333
+New York-Newark |   40.8086 |  -74.0204
+São Paulo       |  -23.5478 |  -46.6358
+
+
+obiektem docelowym przypisania rozpakowywującego może być lista
+mogą to być zapytania bazodanowe zwracający pojedynczy rekord - np. kod SQL zawierający klauzulę LIMIT 1
+[record] = query_returning_single_row()
+po zapisaniu w wykorzystaniem krotek - byłby zapis (record,)
+
+gdy rekord zawiera tylko jedno pole, możemy je otrzymać bezpośrednio:
+[[field]] = query_returning_single_row_with_single _field()
+po zapisaniu z wykorzystaniem krotek - ((field,),)
+
+w obu przypadkach istotny jest przecinek
+
+
+Dopasowanie wzorców w sekwencjach
+
+nową funkcjonalnością Pythona 3.10 jest dopasowywanie wzorców oparte na instrukcji match/case
+
+PEP 634 – Structural Pattern Matching: Specification
+Strukturalne dopasowywanie wzorców
+
+https://peps.python.org/pep-0634/
+
+https://docs.python.org/3.10/whatsnew/3.10.html#pep-634-structural-pattern-matching
+https://docs.python.org/3.10/whatsnew/3.10.html
+
+
+Przykład 2-9
+przykład użycia match/case
+- metoda z fikcyjnej klasy robot
+
+match message: -> wyrażenie po słowie kluczowym match to temat(subject) - są to dane, które Python będzie próbował dopasować do wzorców w każdej klauzuli case
+
+def handle_command(self, message):
+	match message:
+		case ['BEEPER', frequency, times]:
+		# **1
+			self.beep(times, frequency)
+			
+		case ['NECK', angle]:
+		# **2
+			self.rotate_neck(angle)
+			
+		case ['LED', ident, intensity]:
+		# **3
+			self.leds[ident].set_brightness(ident, intensity)
+		
+		case ['LED', ident, red, green, blue]:
+		# **4
+			self.leds[ident].set_color(ident, red, green, blue)
+		case _:
+		# **5
+			raise InvalidCommand(message)
+			
+**1
+ten wzorzec pasuje do każdego tematu, który jest sekwencją trzech elementów
+- 'BEEPER'
+- kolejne dwa mogą być czymkolwiek i zostaą przypisane do zmiennych frequency oraz times
+
+**2
+dopasowanie do dowolnego tematu z dwoma elementami, z których pierwszym jest 'NECK'
+
+**3
+to pasuje do tematu z trzema elementami zaczynającymi się od 'LED'
+jeśli liczba elementów nie pasuje, Python przejdzie do nastęnej klauzuli case
+
+**4 
+kolejny wzorzec 'LED' z pięcioma elementami
+
+**5
+domyślny przypadek
+zostanie dopasowany do dowolnego tematu, który nie został dopasowany wcześniej
+zmienna _ jest specjalna.
+
+
+jednym z kluczowych ulepszeń match/case jest destrukturyzacja - bardziej zaawansowana forma rozpakowywania - jest to nowość w Pythonie
+
+
+Przykład 2-10
+zmodyfikowano Przykład 2-8
+
+>>> metro_areas = [
+...     ('Tokyo', 'JP', 36.933, (35.689722, 139.691667)),
+...     ('Delhi NCR', 'IN', 21.935, (28.613889, 77.208889)),
+...     ('Mexico City', 'MX', 20.142, (19.433333, -99.133333)),
+...     ('New York-Newark', 'US', 20.104, (40.808611, -74.020386)),
+...     ('São Paulo', 'BR', 19.649, (-23.547778, -46.635833)),
+... ]
+>>> def main():
+...     print(f'{"":15} | {"latitude":>9} | {"longitude":>9}')
+...     for record in metro_areas: 
+	       # tematem jest każda z krotek metro_areas
+		
+		match record: 
+			case [name, _, _, (lat, lon)] if lon <= 0:
+			     # klauzula case ma 2 części:
+			     # wzorzec oraz opcjonalny strażnik 
+			     # - zabezpieczenie po słowie kluczowym if
+			     
+...                          print(f'{name:15} | {lat:9.4f} | {lon:9.4f}')
+... 
+>>> main()
+
+wzorzecz [name, _, _, (lat, lon)] pasuje do sekwencji o czterech elementach - lecz ostatni element musi być sekwencją dwuelementową.
+
+wzorce sekwencji mogą być krotka listami, dowolną kombinacją zagnieżdżonych krotek i list 
+użycie nawiasów () lub [] we wzorcach zagnieżdżonych nie ma większego znaczenia mogą występować wymiennie
+
+wzorzec sekwencji może pasować do wystąpień wiekszości rzeczywistych lub wirtualnych podklas collections.abc.Sequence, z wyjątkiem str, bytes i bytearray
+
+wystąpienia str, bytes i bytearray nie są obsługiwane jako sekwencje w kontekście match/case
+
+
+
+
+
+
+
+
+
+
+ str 42 (73)
