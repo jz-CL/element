@@ -829,7 +829,7 @@ zmodyfikowano Przykład 2-8
 			     # wzorzec oraz opcjonalny strażnik 
 			     # - zabezpieczenie po słowie kluczowym if
 			     
-...                          print(f'{name:15} | {lat:9.4f} | {lon:9.4f}')
+...         	print(f'{name:15} | {lat:9.4f} | {lon:9.4f}')
 ... 
 >>> main()
 
@@ -843,12 +843,80 @@ wzorzec sekwencji może pasować do wystąpień wiekszości rzeczywistych lub wi
 wystąpienia str, bytes i bytearray nie są obsługiwane jako sekwencje w kontekście match/case
 
 
+jeśli chcemy użyć obiektu jesdnego z typów (str, bytes, bytearray) to należy go przekonwertować w klauzuli match
+przykład:
+	phone - jest traktowane jako jedna wartość a nie sekwencja cyfr
+	
+	match tuple(phone):
+		case ['1', *rest]:
+			...
+		case ['2', *rest]:
+			...
+		case ['3' | '4', *rest]:
+			...
+			
+
+typy biblioteki standardowej które są kompatybilne ze wzorcami sekwencji
+
+	list	memoryview	array.array
+	tuple	range		collections.deque
+
+https://docs.python.org/pl/3.10/c-api/memoryview.html#index-0
+
+w przeciwieństwie do rozpakowywania, wzorce nie destrukturyzują obiektów iterowalnych, które nie są sekwencjami (jak iteratory)
+
+symbol _ ma specjalne znaczenie we wzorcach: dopasowuje dowolny pojedynczy element na tej pozycji, ale nigdy nie jest powiązany z wartością dopasowywanego elementu.
+ponadto _ jest jedyną zmienna, która może sie pojawić we wzorcu więcej niż raz
 
 
+można powiązać dowolną część wzorca ze zmienną za pomocą słowa kluczowego as:
+	case [name, _, _, (lat, lon) as coord]:
+	
+przyjmując że temat to ['Shanghai', 'CN', 24.9, (31.1, 121.3)] wcześniejszy przykład zostanie dopasowany i ustawi następujące zmienne
+
+Zmienna		Ustawiana wartość
+name		'Shanghai'
+lat		31.1
+lon		121.3
+coord 		(31.1, 121.3)
+
+wzorce można uczynić bardziej szczegółowymi poprzez dodanie informacji o typie.
+
+poniższy wzorzec dopasowuje tę samą strukturę zagnieżdżoną, co poprzedni, lecz pierwszy element musi być wystąpieniem typu str, a obydwa elemenjty dwuelementowej krotki muszą być wystąpieniemi float:
+
+	case [str(name), _, _, (float(lat), float(lon))]:
+	
+ogólnie wyrażenia str(name) oraz float(lat) wyglądają podobnie jak wywołania konstruktora, które używa sie do przekonwertowania name oraz lat na typy str i float
+
+lecz w kontekście wzorca składnia ta wykonuje sprawdzenie typu w czasie działania, ten wzorzec dopasowuje sekwencję o czterech elementach, której element 0 musi być typu str, a element 3 musi być parą liczb zmiennoprzecinkowych
+element 0 zostanie powiązany ze zmienną name, a liczby z elementu 3 zostana powiązane odpowiednio ze zmiennymi lat i lon  
+
+możemy dopasować dowolny temat sekwencji rozpoczynający sie od str i kończący się na zagnieżdżonej sekwencji dwóch liczb float:
+
+	case [str(name), *_, ((float(lat), float(lon)]:
+	
+*_ dopasowuje dowolną liczbę elementów bez wiązania ich ze zmiennymi
+
+użycie napisu *extra zamiast *_ spowoduje powiązanie tych elementow do zmiennej extra jako listy zawierające 0 lub wiecej elementów
+
+opcjonalna klauzula strażnika rozpoczynająca się od if jest przetwarzana tylko wtedy, gdy wzorzec zostanie dopasowany i może odwoływać sie do zmiennych powiazanych we wzorcu, jak w przykładzie 2-10
+
+		match record: 
+			case [name, _, _, (lat, lon)] if lon <= 0:						     
+...         	print(f'{name:15} | {lat:9.4f} | {lon:9.4f}')
+
+zagnieżdżony blok z instrukcją print jest wykonywany tylko wtedy, gdy wzorzorzec jest dopasowany i wyrażenie strażnika jest prawdziwe
+
+przykłady match/case
+
+https://github.com/gvanrossum/patma/blob/3ece6444ef70122876fd9f0099eb9490a2d630df/EXAMPLES.md#case-6-a-very-deep-iterable-and-type-match-with-extraction
+
+przykład 2-10 nie jest ulepszeniem przykładu 2-8.
+
+są to przykłady 2 sposobów na realizację tej samej rzeczy
 
 
-
-
+dopasowanie wzorcówsekwencji w interprzeterze 
 
 
  str 42 (73)
