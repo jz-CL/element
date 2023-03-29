@@ -916,7 +916,98 @@ przykład 2-10 nie jest ulepszeniem przykładu 2-8.
 są to przykłady 2 sposobów na realizację tej samej rzeczy
 
 
-dopasowanie wzorcówsekwencji w interprzeterze 
+dopasowanie wzorców sekwencji w interprzeterze 
 
 
- str 42 (73)
+https://github.com/fluentpython/lispy/blob/main/original/norvig/lis.py
+http://norvig.com/lispy.html
+
+w powyższym kodzie istotnymi funkcjami jest parse i evaluate (eval - w oryginale)
+
+jest podana komenda parse('(gcd 18 45)')
+
+
+>>> s = '(gcd 18 45)'
+>>> s.replace('(',' ( ').replace(')', ' ) ').split()
+['(', 'gcd', '18', '45', ')']
+
+i wynikiem działania parse jest
+['gcd', 18, 45]
+
+te dane trafiają do evaluate ['gcd', 18, 45] ta przetwarza funkcję gcd z argumentami 18 i 45.
+w wyniku przetwarzania oblicza największy wspólny dzielnik argumentów: 9
+
+parse(''' 
+	(define double
+		(lambda (n)
+			(* n 2)))
+''')
+wynik:
+['define', 'double', ['lambda',['n'], ['*', 'n', 2]]]
+
+tu mamy definicję funkcji o nazwie double z parametrem n.
+Ciałem tef funkcji jest wyrażenie (* n 2) - wynikiem wywołania funkcji w Scheme jest wartość ostatniego wyrażenia w jej ciele
+
+
+
+destrukturyzacja sekwencji - jak działa evaluator
+
+przykład 2-11
+dopasowywanie wzorców bez match/case
+
+
+def evaluate(exp: Expression, env: Environment) -> Any:
+	"Ewaluate an expression in an environment."
+	
+	if isinstance(exp, Symbol):
+	    # referencja do zmiennej
+		return env[exp]
+		
+	elif isinstance(exp, list):
+		# literał do stałej
+		return exp
+	
+	# ...
+	
+	elif exp[0] == 'quote':
+		# (wyrażenie quote)
+		(_, x) = exp
+		return x
+		
+	elif exp[0] == 'if':
+		# (if test kontynuacja alternatywa)
+		(_, test, consequence, alternative) = exp
+		if evaualate(test, env):
+			return evaluate(consequence, env)
+			
+	elif exp[0] == 'lambda':
+		# (lambda (parametry) ciało)
+		(_, parms, *body) = exp
+		return Procedure(parms, body, env)
+		
+	elif exp[0] == 'define':
+		# define
+		(_, name, value_exp) = exp
+	    env[name] = evaluate(value_exp, env)
+	    
+	    
+	   # ...
+	   
+każdy elif sprawdza pierwszy element z listy, następnie rozpakowuje listę, ignorując pierwszy element.
+
+
+przykład 2-12
+dopasowywanie wzorców z match/case - Python 3.10
+
+ 
+	
+		
+
+
+
+
+
+ 
+
+
+ str 46 (77)
