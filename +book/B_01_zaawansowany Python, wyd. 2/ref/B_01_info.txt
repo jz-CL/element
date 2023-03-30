@@ -999,8 +999,72 @@ każdy elif sprawdza pierwszy element z listy, następnie rozpakowuje listę, ig
 przykład 2-12
 dopasowywanie wzorców z match/case - Python 3.10
 
- 
+def evaluate(exp: Expression, env: Environment) -> Any:
+	"Evaluate an expression in an environment." 
 	
+	match exp:
+		# ...
+		case ['quote', x]:
+			# dopasuj, jeśli temat jest dwuelementową sekwencją 
+			# rozpoczynającą się od 'quote'
+			return x
+		
+		case ['if', test, consequence, alternative]:
+			# dopasuj jeśli temat jest czteroelementową sekwencją zaczynającą się od 'if'
+			if evaluate(test, env):
+				return evaluate(consequence, env)
+			else:
+				return evaluate(consequence, alternative)
+		
+		case ['lambda', [*parms], *body] if body:
+			# dopasuj jeślitemat jest sekwencją trzech lub więcej elementów, 
+			# zaczynającą się od 'lambda'. strażnik gwarantuje, że body nie jest puste
+			# [*parms] - zagnieżdżona sekwencja
+			return Procedure(parms, body, env)
+			
+		case ['define' Symbol() as name, value_exp]:
+			# dopasuj, jeśli temat jest sekwencją trzyelementową rozpoczynającą się od 
+			# 'define' po którym następuje wystąpienie klasy Symbol
+			env[name] = evaluate(value_exp, env)
+			
+		case _:
+			# przechwyć wszystko, 
+			# jeśli exp nie pasuje do żadnego ze wzorców - można potraktować jako zdeformowane
+			# dlatego zgłaszamy wyjątek SyntaxError
+			raise SyntaxError(lispstr(exp))
+			
+bez klauzuli przechwytującej wszystko instrukcja match nie zrobi nic, gdy temat nie dopasuje żadnego przypadku - to może być bezgłośna awaria.
+
+w przykładzie 2-11 we wzorcu 'define' kod nie sprawdza, czy name jest wystąpieniem klasy Symbol - powinno być wywołanie bloku if, wywołania isinstance
+
+do przemyślenia
+alternatywne wzorce dla lambda
+--> 47 (78)
+
+składnia skrótowa dla definiowania funkcji
+
+	case ['define', [Symbol() as name, *parms], *body] if body:
+		env[name] = Procedure(parms, body, env)
+
+
+dopasowywanie wzorców jest przykładem programowania deklaratywnego:
+kod opisuje, "co" chcemy dopasować, zamiast pokazywać "jak" to dopasować
+
+
+
+info
+https://norvig.com/lispy.html
+
+
+wycinanie
+
+wspólną funkcjonalnością typów list, tuple, str i wszystkich typów sekwencyjnych w Pythonie jest obsługa operacji wycinania
+
+
+
+
+			
+			 
 		
 
 
