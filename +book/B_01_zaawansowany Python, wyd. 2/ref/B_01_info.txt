@@ -1179,4 +1179,85 @@ for item in line_items:
     $28.00   Panavise Jr. - PV-201             
     $34.95   PiTFT Mini Kit 320x240  
 
+
+
+
+
+Wycinanie wielowymiarowe i wielokropki
+
+operator [] może przyjmować wielowymiarowe indeksylub wycinki rozdzielone przecinkami
+
+metodyspecjalne __getitem__ i __setitem__, które obsługują operator [], odbierają indeksy w a[i, j]
+jako krotkę - aby odczytać a[i, j], Python wywołuje a.__getitem__((i, j))
+
+używane jest to w zewnętrznym pakiecie NumPy, gdzie elementy dwuwymiarowej tablicy numpy.narray mogą być przechwytywane przy użyciu składni a[i, j], a dwuwymiarowy wycinek pozyskany za pomocą takiego wyrażenia jak a[m:n, k:l]
+
+Wbudowane typy sekwencji w Pythonie są jednowymiarowe, wiec mogą obsługiwać tylko jeden indeks lub wycinek, a nie ich krotkę
+
+wielokropek - ... - jest rozpoznawany przez parser Pythona jako token.
+jest aliasem do obiektu Ellipsis, pojedynczej instancji klasy ellipsis
+Może być przekazywany jako argument do funkcji oraz jako część specyfikacji wycina, 
+jak w f(a, ..., z) lub a[i, ...]
+
+w module NumPy wielokropek ... jest używany jako skrót podczas wycinni tablic o wielu wymiarach.
+jeśli np. x to tablica czterowmiarowa, x[i, ...] jest skrótem dla x[i, :, :, :,]
+
+https://numpy.org/doc/stable/user/quickstart.html#indexing-slicing-and-iterating
+
+
+ciekawe jakie są zastosowania Ellipsis?
+
+wycinki nie są jedynie przydatne do wyodrębniania informacji z sekwencji.
+
+można ich używać do modyfikacji zmiennych sekwencji w miejscu - czyli bez budowania ich od początku.
+
+Przypisywanie do wycinków
+
+można wszczepiać lub usuwać fragmenty sekwencji zmiennychlub w inny sposób modyfikowaćje w miejscu przy użyciu notacji wycinka po lewej stronie polecenia przypisania lub jako celu polecenia del (usuwanie).
+
+
+przykład
+
+>>> l = list(range(10))
+>>> l
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> 
+
+>>> l[2:5]
+[2, 3, 4]
+
+>>> l[2:5] = [20, 30]
+>>> l
+[0, 1, 20, 30, 5, 6, 7, 8, 9]
+>>> 
+
+>>> l[5:7]
+[6, 7]
+
+>>> del l[5:7]
+>>> l
+[0, 1, 20, 30, 5, 8, 9]
+
+
+>>> l[3::2]
+[30, 8]
+
+>>> l[3::2] = [11, 22]
+>>> l
+[0, 1, 20, 11, 5, 22, 9]
+
+kiedy cel przypisania jest wycinkiem -> l[2:5] to po prawej stronie musi być obiekt iterowalny, nawet wtedy gdy ma tylko 1 element
+
+>>> l[2:5] = 100
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: can only assign an iterable
+>>> 
+
+>>> l[2:5] = [100]
+>>> l
+[0, 1, 100, 22, 9]
+>>> 
+
+ 
  str 51 (82)
