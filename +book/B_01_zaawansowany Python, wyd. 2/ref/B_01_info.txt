@@ -1332,5 +1332,126 @@ a powinno być tak że obiekt row powinien być budowany przy kolejnej iteracji
 
 
 
+Przypisanie złożone w przypadku sekwencji
 
- str 53 (84)
+złożone operatory przypisania += i *= zachowują bardzo różne zależności od pierwszego operandu.
+
++=
+
+metoda specjalna, która umożliwia działanie operatora +=, to __iadd__ (in-place addition - dodawanie w miejscu)
+
+jeśli metoda __iadd__ jest nie zaimplementowana, Python Python ucieka sie do wywołania metody __add__
+
+mamy przykład
+
+>>> a += b
+gdy a implementuje __iadd__, ta metoda zostanie wywołana.
+dla zmiennych sekwencji - list, bytearray, array.array - obiekt a zostanie zmieniony w miejscu, obiekt będzie opdobny do a.extend(b).
+
+jeśli obiekt a nie implementuje metody __iadd__, wyrażenie  a += b ma taki sam efekt jak a = a + b
+wyrażenie a + b jest przetważane, tworząc nowy obiekt, który jest następnie związany z a
+tożsamość obiektu związanego z a może lecz nie musi si e zmienić
+zależy to od dostępności metody __iadd__
+
+podobnie ma się z operatorem *=, z tym że zaimplementowaną metodą jest __imul__
+
+demonstracja operatora *=
+
+>>> l = [1, 2, 3]
+>>> id(l)
+140562524035712
+identyfikator początkowej listy - l
+
+>>> l *= 2
+>>> l
+[1, 2, 3, 1, 2, 3]
+>>> id(l)
+140562524035712
+po przemnożeniu lista l jest tym samym obiektem z dopisanymi nowymi elementami
+
+>>> t = (1, 2, 3)
+>>> id(t)
+140562525978432
+identyfikator początkowej krotki
+
+>>> t *= 2
+>>> id(t)
+140562525416192
+po przemnożeniu została utworzona nowa krotka
+
+wielokrotna konkatenacja niezmiennych sekwencji jest niewydajna, ponieważ zamiast dopisywać nowe elementy, interpreter musi kopiować całą sekwencję docelowąaby utworzyć nową z nowymi elementami dodanymi za pomocą konkatenacji - nie dotyczy str
+
+Przykład 2-16
+
+>>> t = (1, 2, [30, 40])
+>>> t[2] += [50, 60]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+>>> t
+(1, 2, [30, 40, 50, 60])
+>>> 
+
+https://pythontutor.com/
+
+https://pythontutor.com/visualize.html#code=t%3D%20%281,%202,%20%5B30,%2040%5D%29%0At%5B2%5D%20%2B%3D%20%5B50,%2060%5D%0A&cumulative=false&curInstr=2&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false
+
+
+
+>>> import dis
+
+
+>>> dis.dis('s[a] += b')
+  1           0 LOAD_NAME                0 (s)
+              2 LOAD_NAME                1 (a)
+              4 DUP_TOP_TWO
+              6 BINARY_SUBSCR
+              umieść wartość a[a] na wierzch stosu - TOS - top of stack
+              
+              8 LOAD_NAME                2 (b)
+             10 INPLACE_ADD
+             wykonaj TOS += b
+             kończy się sukcesem, jeśli TOS odnosi się do zmiennego obiektu - 
+             w przykładzie 2-17 to lista
+             
+             12 ROT_THREE
+             14 STORE_SUBSCR
+             przypisz s[a] = TOS
+             kończy się niepowodzeniem, jeśli obiekt s jest niezmienny - 
+             w przykładzie 2-17 to krotka                          
+             
+             16 LOAD_CONST               0 (None)
+             18 RETURN_VALUE
+>>> 
+
+jest to przykład, z którego wynikją wnioski:
+	umieszczanie zmiennych elementów w krotkach nie jest właściwe
+	
+	przypisanie złożone nie jest operacją atomową - 
+	otrzymujemy wyjątek po wykonaniu części zadania
+	
+	inspekcj kodu bajtowego Pythona nie jest trudna, przydaje się aby zobaczyć,
+	co dzieje się wewnątrz
+	
+	
+Metoda list.sort oraz wbudowana funkcja sorted
+
+metoda list.sort sortuje listę w miejscu - bez wykonanywania kopii.
+zwraca none
+
+jest przyjęta konwencja interfejsu API Pythona:
+funkcje lub metody, które zmieniają obiekt w miejscu, powinny zwracać None, aby była jasność, 
+że został zmieniony sam obiekt i nie utworzono nowego - podobnie jak random.shuffle.
+
+konwencja zwracania None, aby sygnalizować zmiany w miejscu, ma wadę.
+
+nie można wykonać kaskady wywołań takich metod.
+
+Natomiast metody, które zwracają nowe obiekty (obiekty str) mogą być wywołane kaskadowow stylu płynnego interfejsu
+
+
+-->
+https://en.wikipedia.org/wiki/Fluent_interface
+
+
+ str 59 (90)
