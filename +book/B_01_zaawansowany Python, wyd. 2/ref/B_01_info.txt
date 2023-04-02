@@ -1259,5 +1259,78 @@ TypeError: can only assign an iterable
 [0, 1, 100, 22, 9]
 >>> 
 
- 
++ i * z sekwencjami
+
+jest oczekiwanie że sekwencje będą obsługiwane przez operatory + i *
+zwykle jest tak że oba operandy operatora + musza być tego samego typu sekwencyjnego - żadeb=n z nich jest niemodyfikowany
+
+operator + i * zawsze tworzą nowy obiekt i nigdy nie zmieniaja swoich operandów
+
+Budowanie listy list
+
+chcemy zainicjalizować listę z pewną liczbą list zagnieżdżonych.
+
+Przykład 2-14
+Lista trzech list a długości 3 może reprezentować planszę do gry w kółko i krzyżyk
+
+>>> board = [['_'] * 3 for i in range(3)]
+tworzenie trzech list z trzema elementami w każdej
+
+>>> board
+[['_', '_', '_'], ['_', '_', '_'], ['_', '_', '_']]
+
+umieszczamy X w wierszu 1, kolumnie 2 i sprawdzenie wyniku
+
+>>> board[1][2] = 'X'
+>>> board
+[['_', '_', '_'], ['_', '_', 'X'], ['_', '_', '_']]
+
+należy uważać gdyż można otrzymać listę trzech odwołań do tej samej listy
+
+>>> weird_board = [['-'] * 3] * 3
+zewnętrzna lista jest złożona z trzech odwołań do tej samej listy wewnętrznej
+dopóki nie ma zmian wydaje się OK.
+
+>>> weird_board
+[['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+
+umieszczamy O w wierszu 1, kolumnie 2 i sprawdzenie wyniku
+>>> weird_board[1][2] ='O'
+gdy umieścimy 'O' pokazuje że wszystkie wiersze są aliasami odwołującymi sie do tego samego obiektu
+
+>>> weird_board
+[['-', '-', 'O'], ['-', '-', 'O'], ['-', '-', 'O']]
+
+
+ww przykład działa zgodnie z poniższym kodem
+
+>>> row = ['-'] * 3
+>>> board = []
+>>> for i in range(3):
+...     board.append(row)
+... 
+>>> 
+
+ten sam obiekt row jest dopisany trzy razy do obiektu board
+
+a powinno być tak że obiekt row powinien być budowany przy kolejnej iteracji
+
+>>> board = []
+>>> for i in range(3):
+...     row = ['-'] * 3
+...     board.append(row)
+... 
+>>> 
+
+>>> board
+[['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+>>> 
+>>> board[1][2] = 'X'
+>>> board
+[['-', '-', '-'], ['-', '-', 'X'], ['-', '-', '-']]
+>>> 
+
+
+
+
  str 53 (84)
