@@ -1597,5 +1597,96 @@ aby zachować posortowaną tablicę podczas dodawania do niej elementów używam
 https://docs.python.org/3/library/bisect.html#bisect.insort
 
 
+widoki pamięci
 
- str 65 (96)
+
+wbudowana klasa memorview - widok pmęci - jest typem sekwencji obejmująca współdzieloną pamięć,
+która pozwala obsługiwać wycinki tablic bez kopiowania bajtów.
+
+https://stackoverflow.com/questions/4845418/when-should-a-memoryview-be-used/
+
+widok pamięci to uogólniona struktura tablicy NumPy w samym Pythonie
+- bez funkcji matematycznych 
+
+pozwala na współdzielenie pamięci między strukturami danych - jak obrazy PIL, bazy danych SQLite, tablice NumPy itp. - bez kopiowania.
+
+metoda memoryview.cast pozwala zmieniać sposób odczytywania lub zapisywania wielu bajtów jako jednostek bez przenoszenia bitów - jak operator cast w języku C.
+
+memoryview.cast zwraca jeszcze jeden obiekt memoryview, zawsze współdzieląc tę samą pamięć.
+
+https://docs.python.org/pl/3/library/array.html
+
+Przykład 2-20
+
+obsługiwanie 6 bajtów pamięci jako widoków 1x6, 2x3, oraz 3x2
+
+>>> from array import array
+
+buduje tablicę (kod typu B)
+>>> octest = array('B', range(6))
+>>> octest
+array('B', [0, 1, 2, 3, 4, 5])
+
+buduje widok pamięci memoryview z tablicy octest i eksportuje jako listę
+>>> m1 = memoryview(octest)
+>>> m1.tolist()
+[0, 1, 2, 3, 4, 5]
+
+buduje nowy memoryview z poprzedniego - m1 - z dwoma rzędami i trzema kolumnami
+>>> m2 = m1.cast('B', [2, 3])
+>>> m2.tolist()
+[[0, 1, 2], [3, 4, 5]]
+
+
+buduje memoryview - z trzema rzędami i dwoma kolumnami
+>>> m3 = m1.cast('B', [3, 2])
+>>> m3.tolist()
+[[0, 1], [2, 3], [4, 5]]
+
+nadpisuje bajt w m2 w rzędzie 1 i kolumnie 1
+>>> m2[1,1] = 22
+
+nadpisuje bajt w m3 w rzędzie 1 i kolumnie 1
+>>> m3[1,1] = 33
+
+pokaż oryginalną tablicę - tablica jest współdzielona
+>>> octest
+array('B', [0, 1, 2, 33, 22, 5])
+
+nie właściwe użycie memoryview
+
+
+>>> from array import array
+>>> numbers = array('h', [-2, -1, 0, 1, 2])
+
+budowanie widoku pamięci memoryview z pięcio 2-bajtowych elementuów tablicy liczb całkowitych ze znakiem - kod 'h'
+>>> memv = memoryview(numbers)
+
+memv widzi te same 5 elementów  w tablicy
+>>> len(memv)
+5
+>>> memv[0]
+-2
+
+tworzenie mem_oct poprzez rzutowanie elementów memv na kod typu 'B' - jeden bajt bez znaku
+>>> mem_oct = memv.cast('B')
+
+eksportuj elementy memv_oct jako listę do inspekcji
+>>> memv_oct.tolist()
+[254, 255, 255, 255, 0, 0, 1, 0, 2, 0]
+
+
+
+przypis wartość 4 do bajta o indeksie 5
+>>> memv_oct[5] = 4
+
+zmiana w tablicy numbers - 4 w najbardziej znaczącym bajcie  2-bajtowego typu całkowitoliczbowego daje w wyniku 1024
+>>> numbers
+array('h', [-2, -1, 1024, 1, 2])
+
+przykład inspekcji widoku pamięci za pomocą pakietu struct
+https://www.fluentpython.com/extra/parsing-binary-struct/
+
+
+
+ str 67 (98)
