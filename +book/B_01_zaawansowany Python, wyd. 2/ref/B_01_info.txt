@@ -1801,6 +1801,61 @@ https://wiki.python.org/moin/GlobalInterpreterLock
 
 https://www.dask.org/
  
+deques i inne kolejki
+
+metody .append i .pop pozwalają uzywać obiektu list jako stosu lub kolejki
+jeśli będziemy używać .append i .pop(0) otrzymamy działanie FIFO 
+wstawianie i usuwanie z lewej strony listy jest kosztowne, ponieważ wymaga przesunięcia całej listy 
+
+klasa collections.deque to dwustronna kolejka przeznaczona do szybkiego wstawiania i usuwania z obu końców
+
+jeśli potrzebujemy listy - ostatnio widzianych elementów lub czegoś podobnego - deque może być ograniczona  - może być tworzona z maksymalna długością.
+
+gdy jest pełna odrzuca elementy z przeciwnego końca, gdy dodajemy nowe
+
+Przykład 2-23
+praca z kolejką deque
 
 
+>>> from collections import deque
+
+opcjonalny argument maxlen ustawia maksymalną liczbe elementów dozwolonych w tej instancji kolejki deque
+w ten sposób ustawia atrybut instancji mx len tylko do odczytu
+>>> dq = deque(range(10), maxlen=10)
+>>> dq
+deque([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], maxlen=10)
+
+
+rotacja z n > 0 - bierze elementy z prawego końca i dodaje je na początku z lewej strony
+gdy n < 0 - elementy są brane z lewj strony i dopisywane z prawej 
+>>> dq.rotate(3)
+>>> dq
+deque([7, 8, 9, 0, 1, 2, 3, 4, 5, 6], maxlen=10)
+>>> dq.rotate(-4)
+>>> dq
+deque([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], maxlen=10)
+
+dopisanie do koleki deque, która jest pełna (len(d) == d.maxlen) powoduje odrzucenie elementów z drugiego końca - w przykładzie 0 jest odrzucone
+>>> dq.appendleft(-1)
+>>> dq
+deque([-1, 1, 2, 3, 4, 5, 6, 7, 8, 9], maxlen=10)
+
+dodanie trzech elementów do prawej strony wypycha najbardziej z lewej położone -1, 1, 2
+>>> dq.extend([11, 22, 33])
+>>> dq
+deque([3, 4, 5, 6, 7, 8, 9, 11, 22, 33], maxlen=10)
+
+
+.extendleft(iter) - działa przez dopisanie każdego elementu z argumentu iter do lewej strony kolejki deque, dlatego końcowe położenie elementów jest odwrócone
+>>> dq.extendleft([10, 20, 30, 40])
+>>> dq
+deque([40, 30, 20, 10, 3, 4, 5, 6, 7, 8], maxlen=10)
+
+
+poza deque istnieja inne akiety biblioteki standardowej Pythona implementujące kolejki
+
+queue
+multuprocessing
+asyncio
+heapq
  str 68 (99)
