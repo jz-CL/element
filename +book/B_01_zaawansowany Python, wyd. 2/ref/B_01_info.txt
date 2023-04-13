@@ -1852,10 +1852,14 @@ deque([3, 4, 5, 6, 7, 8, 9, 11, 22, 33], maxlen=10)
 deque([40, 30, 20, 10, 3, 4, 5, 6, 7, 8], maxlen=10)
 
 
-poza deque istnieja inne akiety biblioteki standardowej Pythona implementujące kolejki
+poza deque istnieją inne pakiety biblioteki standardowej Pythona implementujące kolejki
 
 queue
 multuprocessing
 asyncio
 heapq
- str 68 (99)
+
+
+ str 72 (103)
+ 
+ 
