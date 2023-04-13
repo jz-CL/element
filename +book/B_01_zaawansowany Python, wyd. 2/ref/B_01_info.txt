@@ -1688,6 +1688,7 @@ przykład inspekcji widoku pamięci za pomocą pakietu struct
 https://www.fluentpython.com/extra/parsing-binary-struct/
 
 NumPy
+https://numpy.org/doc/stable/index.html
 
 zaawansowane operacje na tablicach i macierzach
 zaimplementowane są wielowymiarowe, homogeniczne  (układ homogeniczny, jednorodny, jednofazowy)
@@ -1723,13 +1724,21 @@ zmiana kształtu tablicy, dodanie jednego wymiaru, następnie inspekcja wyniku
 array([[ 0,  1,  2,  3],
        [ 4,  5,  6,  7],
        [ 8,  9, 10, 11]])
+       
+
+pobranie wiersza o indeksie 2
 >>> a[2]
 array([ 8,  9, 10, 11])
+
+pobranie elementu o indeksie 2,1
 >>> a[2,1]
 9
 
+pobranie kolumny o indeksie 1
 >>> a[:, 1]
 array([1, 5, 9])
+
+utworzenie nowej tablicy przez transpozycję 
 >>> a.transpose()
 array([[ 0,  4,  8],
        [ 1,  5,  9],
@@ -1737,8 +1746,61 @@ array([[ 0,  4,  8],
        [ 3,  7, 11]])
 >>> 
 
+jest możliwość obsługi przez operacje wysokiego poziomu dla ładowania i zapisywania wszystkich elementów numpy.ndarray oraz dokonywania operacji na nich
+
+zapisanie wygenerowanych liczb z podanego zakresu
+
+>>> import numpy as np
+
+>>> random_numbers = np.random.uniform(low=0.0, high=500000.0, size=10000000)
+>>> np.savetxt('floats-10M-lines.txt', random_numbers, delimiter=',')
 
 
+załadowanie 10 mln liczb zmiennoprzecinkowych z pliku tekstowego
+>>> floats = np.loadtxt('floats-10M-lines.txt')
+
+wycinanie sekwencji w celu inspekcji ostatnich trzech liczb
+>>> floats[-3:]
+array([ 24031.20145453, 290148.2348118 , 294461.7897819 ])
+
+przemnożenie każdego elementu tablicy floats przez 0.5 i ponowna inspekcja trzech ostatnich elementów
+>>> floats *= .5
+>>> floats[-3:]
+array([ 12015.60072726, 145074.1174059 , 147230.89489095])
+
+import czasomierza o wysokiej rozdzielczości do pomiarów wydajności 
+>>> from time import perf_counter as pc
+
+podzielenie każdego elementu przez 3
+zmierzony czas dla 10 mln liczb float jest mniejszy niż 1 milisekunda
+>>> t0 = pc(); floats /= 3; pc() - t0
+0.009199692998663522
+
+zapisanie tablicy w bliku binarnym .npy
+>>> numpy.save('floats-10M', floats)
+
+załadowanie danych jako pliku odwzorowanego w pamięci do innej tablicy. Pozwala to na wydajne przetwarzanie wycinków tablicy, jeśli nie mieszczą się całkowicie w tablicy
+floats2 = np.load('floats-10M.npy', 'r+')
+
+Inspekcja ostatnich trzech elementów po przemnożeniu każdego elementu przez 6
+>>> floats2 *= 6
+>>> floats2[-3:]
+memmap([ 24031.20145453, 290148.2348118 , 294461.7897819 ])
+
+
+NumPy i SciPy to potężne biblioteki, są podstawą do innych narzędzi, takich jak biblioteki do analizy danych Pandas 
+
+https://pandas.pydata.org/
+
+
+projekt dask wspiera równoległe przetwarzanie NumPy, Pandas i scikit-learn 
+https://scikit-learn.org/stable/
+
+ww biblioteki zwalniają blokadę GIL
+https://wiki.python.org/moin/GlobalInterpreterLock
+
+https://www.dask.org/
+ 
 
 
  str 68 (99)
