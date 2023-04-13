@@ -1687,6 +1687,58 @@ array('h', [-2, -1, 1024, 1, 2])
 przykład inspekcji widoku pamięci za pomocą pakietu struct
 https://www.fluentpython.com/extra/parsing-binary-struct/
 
+NumPy
+
+zaawansowane operacje na tablicach i macierzach
+zaimplementowane są wielowymiarowe, homogeniczne  (układ homogeniczny, jednorodny, jednofazowy)
+tablice i typy macierzowe, które przechowują nie tylko liczby, lecz również rekordy definiowane przez użytkownika, a także posiada wydajne operacje na elementach
 
 
- str 67 (98)
+SciPy - biblioteka nadbudowująca NumPy - posiada wiele naukowych algorytmów obliczeniowych - od algebry liniowej, obliczeń numerycznych i statystyki, używany jest kod bazowy w językach C i Fortran z repozytorium Netlib.org
+
+https://netlib.org/
+
+
+Przykład 2-22
+podstawowe operacje z wierszami i kolumnami w numpy.ndarray
+
+importowanie modułu NumPy po zainstalowaniu (nie ma go w bibliotece standardowej Pythona).
+zagodnie z konwencją biblioteka numpy jest impostowana jako np
+>>> import numpy as np
+
+budowanie oraz inspekcja tablicy numpy.ndarray zawierająca liczbycałkowite od 0 do 11
+>>> a = np.arange(12)
+>>> a
+array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])
+>>> type(a)
+<class 'numpy.ndarray'>
+
+inspekcja wymiarów tablicy: jest to tablica jednowymiarowa, 12 elementowa
+>>> a.shape
+(12,)
+
+zmiana kształtu tablicy, dodanie jednego wymiaru, następnie inspekcja wyniku 
+>>> a.shape = 3,4
+>>> a
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>> a[2]
+array([ 8,  9, 10, 11])
+>>> a[2,1]
+9
+
+>>> a[:, 1]
+array([1, 5, 9])
+>>> a.transpose()
+array([[ 0,  4,  8],
+       [ 1,  5,  9],
+       [ 2,  6, 10],
+       [ 3,  7, 11]])
+>>> 
+
+
+
+
+
+ str 68 (99)
